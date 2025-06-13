@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AddTaskBar } from "@/components/AddTaskBar";
+import { AddTaskBar } from "@/components/AddTaskBar/AddTaskBar";
 import { KanbanBoard } from "@/components/KanbanBoard/KanbanBoard";
 import type { Task } from "@/components/TaskCard/TaskCard";
 import { v4 as uuidv4 } from "uuid";
