@@ -1,9 +1,27 @@
-import TodayPanel from "../components/TodayPanel/TodayPanel";
+import { useState } from "react";
+import { KanbanBoard } from "@/components/KanbanBoard/KanbanBoard";
+import type { Task } from "@/components/TaskCard/TaskCard";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
+  const [tasks, setTasks] = useState<Task[]>([
+    { id: uuidv4(), title: "Créer l’UI", completed: false, status: "todo" },
+    { id: uuidv4(), title: "Écrire les tests", completed: false, status: "in-progress" },
+    { id: uuidv4(), title: "Corriger les bugs", completed: true, status: "done" },
+  ]);
+
+  const handleToggleTask = (id: string) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  };
+
   return (
-    <main className="min-h-screen p-8 bg-gray-50">
-      <TodayPanel />
+    <main className="min-h-screen p-6 bg-gray-100">
+      <h1 className="text-2xl font-bold mb-6">Mon tableau de tâches</h1>
+      <KanbanBoard tasks={tasks} onToggle={handleToggleTask} />
     </main>
   );
 }
