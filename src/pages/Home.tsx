@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AddTaskBar } from "@/components/AddTaskBar";
 import { KanbanBoard } from "@/components/KanbanBoard/KanbanBoard";
 import type { Task } from "@/components/TaskCard/TaskCard";
 import { v4 as uuidv4 } from "uuid";
@@ -18,9 +19,14 @@ export default function Home() {
     );
   };
 
+  const handleAddTask = (task: Task) => {
+    setTasks((prev) => [...prev, task]);
+  };
+
   return (
     <main className="min-h-screen p-6 bg-gray-100">
       <h1 className="text-2xl font-bold mb-6">Mon tableau de tâches</h1>
+      <AddTaskBar onAddTask={handleAddTask} />
       <KanbanBoard tasks={tasks} onToggle={handleToggleTask} />
     </main>
   );
