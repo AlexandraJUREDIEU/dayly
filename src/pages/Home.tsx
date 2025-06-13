@@ -6,9 +6,9 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([
-    { id: uuidv4(), title: "Créer l’UI", completed: false, status: "todo" },
-    { id: uuidv4(), title: "Écrire les tests", completed: false, status: "in-progress" },
-    { id: uuidv4(), title: "Corriger les bugs", completed: true, status: "done" },
+    { id: uuidv4(), title: "Créer l’UI", completed: false, status: "todo", priority: "high", dueDate: "2023-10-15" },
+    { id: uuidv4(), title: "Écrire les tests", completed: false, status: "in-progress", priority: "medium", dueDate: "2023-10-16" },
+    { id: uuidv4(), title: "Corriger les bugs", completed: true, status: "done", priority: "low", dueDate: "2023-10-17" },
   ]);
 
   const handleToggleTask = (id: string) => {
