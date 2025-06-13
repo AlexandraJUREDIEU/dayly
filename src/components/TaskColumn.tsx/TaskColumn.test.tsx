@@ -6,8 +6,8 @@ import type { Task } from "../TaskCard/TaskCard";
 
 describe("<TaskColumn />", () => {
   const tasks: Task[] = [
-    { id: "1", title: "Tâche 1", completed: false },
-    { id: "2", title: "Tâche 2", completed: true },
+  { id: "1", title: "Tâche 1", completed: false, status: "todo" },
+  { id: "2", title: "Tâche 2", completed: true, status: "in-progress" },
   ];
 
   it("affiche le titre de la colonne", () => {

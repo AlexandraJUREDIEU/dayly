@@ -3,6 +3,7 @@ export type Task = {
   title: string;
   completed: boolean;
   dueDate?: string;
+  status: "todo" | "in-progress" | "done";
 };
 
 type TaskCardProps = {
