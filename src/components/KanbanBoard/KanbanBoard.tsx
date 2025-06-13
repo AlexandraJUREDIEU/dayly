@@ -9,15 +9,23 @@ type KanbanBoardProps = {
 };
 
 export function KanbanBoard({ tasks, onToggle }: KanbanBoardProps) {
-  const todo = tasks.filter((task) => task.status === "todo");
-  const inProgress = tasks.filter((task) => task.status === "in-progress");
-  const done = tasks.filter((task) => task.status === "done");
+  const columns: { title: string; status: Task["status"] }[] = [
+    { title: "À faire", status: "todo" },
+    { title: "En cours", status: "in-progress" },
+    { title: "Terminées", status: "done" },
+  ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <TaskColumn title="À faire" tasks={todo} onToggle={onToggle} />
-      <TaskColumn title="En cours" tasks={inProgress} onToggle={onToggle} />
-      <TaskColumn title="Fait" tasks={done} onToggle={onToggle} />
+      {columns.map(({ title, status }) => (
+        <TaskColumn
+          key={status}
+          title={title}
+          status={status}
+          tasks={tasks.filter((t) => t.status === status)}
+          onToggle={onToggle}
+        />
+      ))}
     </div>
   );
 }
