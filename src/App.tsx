@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import { AppLayout } from "@/components/Layout";
+import { AppLayout } from "./components/Layout/AppLayout";
+
 
 function App() {
 
   return (
     <Router>
-      <AppLayout>
         <Routes>
-          <Route path="/" element={<Home />} />
-          {/* D'autres routes viendront ici plus tard */}
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Home />} />
+          </Route>
         </Routes>
-      </AppLayout>
     </Router>
   )
 }
