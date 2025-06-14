@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { AddTaskBar } from "@/components/AddTaskBar/AddTaskBar";
 import { KanbanBoard } from "@/components/KanbanBoard/KanbanBoard";
 import type { Task } from "@/components/TaskCard/TaskCard";
 import { v4 as uuidv4 } from "uuid";
+import { TaskModal } from "@/components/TaskModal";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([
@@ -25,8 +25,10 @@ export default function Home() {
 
   return (
     <main className="min-h-screen p-6 bg-gray-100">
+      <div className="flex justify-between">
       <h1 className="text-2xl font-bold mb-6">Mon tableau de tâches</h1>
-      <AddTaskBar onAddTask={handleAddTask} />
+      <TaskModal onCreate={handleAddTask} />
+      </div>
       <KanbanBoard tasks={tasks} onToggle={handleToggleTask} />
     </main>
   );
