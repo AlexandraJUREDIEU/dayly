@@ -32,7 +32,7 @@ function getPriorityColor(priority?: Task["priority"]) {
 export default function TaskCard({ task, onToggle }: TaskCardProps) {
   return (
     <Card className="mb-2">
-      <CardContent className="flex items-center justify-between p-4">
+      <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4">
         <div className="flex items-center gap-3">
           <Checkbox
             id={`checkbox-${task.id}`}
@@ -49,7 +49,7 @@ export default function TaskCard({ task, onToggle }: TaskCardProps) {
           </label>
         </div>
 
-        <div className="flex flex-col items-end gap-3">
+        <div className="flex flex-col md:items-end items-start gap-3">
           {task.priority && (
             <span
               className={`text-xs px-2 py-0.5 rounded-full font-medium ${getPriorityColor(

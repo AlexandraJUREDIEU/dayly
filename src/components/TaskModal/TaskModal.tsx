@@ -38,9 +38,9 @@ export function TaskModal({ onCreate }: TaskModalProps) {
       completed: false,
       status,
       priority,
-      dueDate : dueDate || undefined,
+      dueDate: dueDate || undefined,
     };
-    // DEBUG: Log the new task to console   
+    // DEBUG: Log the new task to console
     console.log("New Task Created:", newTask);
 
     onCreate(newTask);
@@ -53,7 +53,10 @@ export function TaskModal({ onCreate }: TaskModalProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">+ Nouvelle tâche</Button>
+        <Button variant="outline">
+          <span className="hidden sm:inline">Nouvelle tâche</span>
+          <span className="inline sm:hidden">+</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>

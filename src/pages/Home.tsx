@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <main className="min-h-screen p-6 bg-gray-100">
       <div className="flex justify-between">
-      <h1 className="text-2xl font-bold mb-6">Mon tableau de tâches</h1>
+      <h1 className="md:text-2xl font-bold mb-6">Mon tableau de tâches</h1>
       <TaskModal onCreate={handleAddTask} />
       </div>
       <KanbanBoard tasks={tasks} onToggle={handleToggleTask} />
