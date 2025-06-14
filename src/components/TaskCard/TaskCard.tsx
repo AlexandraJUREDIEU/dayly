@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CalendarDays } from "lucide-react";
 
 export type Task = {
   id: string;
@@ -48,12 +49,7 @@ export default function TaskCard({ task, onToggle }: TaskCardProps) {
           </label>
         </div>
 
-        <div className="flex items-center gap-3">
-          {task.dueDate && (
-            <span className="text-xs text-gray-500">
-              {new Date(task.dueDate).toLocaleDateString("fr-FR")}
-            </span>
-          )}
+        <div className="flex flex-col items-end gap-3">
           {task.priority && (
             <span
               className={`text-xs px-2 py-0.5 rounded-full font-medium ${getPriorityColor(
@@ -66,6 +62,19 @@ export default function TaskCard({ task, onToggle }: TaskCardProps) {
                 ? "Moyenne"
                 : "Basse"}
             </span>
+          )}
+          {task.dueDate && (
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <CalendarDays className="w-4 h-4" />
+              <span>
+                Échéance :{" "}
+                {new Date(task.dueDate).toLocaleDateString("fr-FR", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
           )}
         </div>
       </CardContent>
