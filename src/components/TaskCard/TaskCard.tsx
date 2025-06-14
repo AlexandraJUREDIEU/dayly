@@ -1,6 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarDays } from "lucide-react";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 
 export type Task = {
   id: string;
@@ -14,6 +16,7 @@ export type Task = {
 type TaskCardProps = {
   task: Task;
   onToggle?: (id: string) => void;
+  isDragging?: boolean;
 };
 
 function getPriorityColor(priority?: Task["priority"]) {
@@ -29,9 +32,24 @@ function getPriorityColor(priority?: Task["priority"]) {
   }
 }
 
-export default function TaskCard({ task, onToggle }: TaskCardProps) {
+export default function TaskCard({ task, onToggle, isDragging }: TaskCardProps) {
+   const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: task.id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition: "transform 200ms ease",
+  };
+
   return (
-    <Card className="mb-2">
+    <Card
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className={`mb-2 cursor-grab ${isDragging ? "opacity-0" : ""}`}
+    >
       <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4">
         <div className="flex items-center gap-3">
           <Checkbox
