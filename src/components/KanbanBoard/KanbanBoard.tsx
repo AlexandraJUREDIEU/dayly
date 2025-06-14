@@ -15,6 +15,9 @@ export function KanbanBoard({ tasks, onToggle }: KanbanBoardProps) {
     { title: "Terminées", status: "done" },
   ];
 
+  // DEBUG: Log the tasks to console
+  console.log("Tasks in KanbanBoard:", tasks);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {columns.map(({ title, status }) => (
