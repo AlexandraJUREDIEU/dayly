@@ -1,9 +1,18 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import { AppLayout } from "./components/Layout/AppLayout";
+
+
 function App() {
 
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">    Hello world!  </h1>
-    </>
+    <Router>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Home />} />
+          </Route>
+        </Routes>
+    </Router>
   )
 }
 
