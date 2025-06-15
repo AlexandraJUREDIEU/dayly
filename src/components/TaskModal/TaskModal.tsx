@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -24,12 +25,20 @@ type TaskModalProps = {
 };
 
 export function TaskModal({ onCreate }: TaskModalProps) {
+  const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState<Task["status"]>("todo");
   const [priority, setPriority] = useState<Task["priority"]>("medium");
   const [dueDate, setDueDate] = useState<string | undefined>("");
 
-  const handleSubmit = () => {
+  const resetForm = () => {
+    setTitle("");
+    setStatus("todo");
+    setPriority("medium");
+    setDueDate("");
+  };
+
+  const handleSave = (closeAfterSave: boolean) => {
     if (!title.trim()) return;
 
     const newTask: Task = {
@@ -40,18 +49,18 @@ export function TaskModal({ onCreate }: TaskModalProps) {
       priority,
       dueDate: dueDate || undefined,
     };
-    // DEBUG: Log the new task to console
-    console.log("New Task Created:", newTask);
 
     onCreate(newTask);
-    setTitle("");
-    setStatus("todo");
-    setPriority("medium");
-    setDueDate("");
+
+    if (closeAfterSave) {
+      setOpen(false);
+    }
+
+    resetForm();
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <span className="hidden sm:inline">Nouvelle tâche</span>
@@ -61,6 +70,10 @@ export function TaskModal({ onCreate }: TaskModalProps) {
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>Créer une tâche</DialogTitle>
+          <DialogDescription>
+            Remplis les champs ci-dessous pour ajouter une nouvelle tâche à ton
+            tableau.
+          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 py-2">
           <div>
@@ -82,7 +95,7 @@ export function TaskModal({ onCreate }: TaskModalProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="todo">À faire</SelectItem>
-                <SelectItem value="in-progress">En cours</SelectItem>
+                <SelectItem value="in_progress">En cours</SelectItem>
                 <SelectItem value="done">Terminé</SelectItem>
               </SelectContent>
             </Select>
@@ -112,9 +125,15 @@ export function TaskModal({ onCreate }: TaskModalProps) {
               onChange={(e) => setDueDate(e.target.value)}
             />
           </div>
-          <Button className="mt-4 w-full" onClick={handleSubmit}>
-            Ajouter
-          </Button>
+
+          <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
+            <Button variant="secondary" onClick={() => handleSave(false)}>
+              Sauvegarder & continuer
+            </Button>
+            <Button onClick={() => handleSave(true)}>
+              Sauvegarder & fermer
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
