@@ -107,7 +107,6 @@ export default function TaskCard({ task }: TaskCardProps) {
         open={editOpen}
         onOpenChange={setEditOpen}
         initialTask={task}
-        onCreate={() => {}}
         onUpdate={(updatedTask) => {
           updateTask(updatedTask);
           toast.success("Tâche modifiée avec succès");

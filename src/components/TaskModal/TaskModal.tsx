@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { Task } from "../TaskCard/TaskCard";
 
 type TaskModalProps = {
-  onCreate: (task: Task) => void;
+  onCreate?: (task: Task) => void;
   onUpdate?: (task: Task) => void;
   initialTask?: Task;
   open: boolean;
@@ -71,7 +71,7 @@ export function TaskModal({
 
     if (initialTask && onUpdate) {
       onUpdate(task);
-    } else {
+    } else if (onCreate) {
       onCreate(task);
     }
 
