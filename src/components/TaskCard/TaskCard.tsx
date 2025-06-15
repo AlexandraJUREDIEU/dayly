@@ -1,3 +1,4 @@
+import { useTaskStore } from "@/store/useTaskStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarDays } from "lucide-react";
@@ -13,7 +14,6 @@ export type Task = {
 
 type TaskCardProps = {
   task: Task;
-  onToggle?: (id: string) => void;
 };
 
 function getPriorityColor(priority?: Task["priority"]) {
@@ -29,7 +29,9 @@ function getPriorityColor(priority?: Task["priority"]) {
   }
 }
 
-export default function TaskCard({ task, onToggle }: TaskCardProps) {
+export default function TaskCard({ task }: TaskCardProps) {
+  const toggleTask = useTaskStore((state) => state.toggleTask);
+
   return (
     <Card className="mb-2">
       <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4">
@@ -37,7 +39,7 @@ export default function TaskCard({ task, onToggle }: TaskCardProps) {
           <Checkbox
             id={`checkbox-${task.id}`}
             checked={task.completed}
-            onCheckedChange={() => onToggle?.(task.id)}
+            onCheckedChange={() => toggleTask(task.id)}
           />
           <label
             htmlFor={`checkbox-${task.id}`}
