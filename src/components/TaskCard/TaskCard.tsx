@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useTaskStore } from "@/store/useTaskStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -30,7 +31,7 @@ function getPriorityColor(priority?: Task["priority"]) {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
-  const toggleTask = useTaskStore((state) => state.toggleTask);
+  const { toggleTask, removeTask } = useTaskStore();
 
   return (
     <Card className="mb-2">
@@ -78,6 +79,17 @@ export default function TaskCard({ task }: TaskCardProps) {
               </span>
             </div>
           )}
+
+          {/* Bouton Supprimer */}
+          <button
+            onClick={() => {
+              removeTask(task.id);
+              toast.success("Tâche supprimée avec succès");
+            }}
+            className="text-xs text-red-500 hover:underline"
+          >
+            Supprimer
+          </button>
         </div>
       </CardContent>
     </Card>
