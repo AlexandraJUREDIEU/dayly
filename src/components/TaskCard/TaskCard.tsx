@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { TaskModal } from "@/components/TaskModal";
+import { toast } from "sonner";
 import { useTaskStore } from "@/store/useTaskStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -30,56 +33,86 @@ function getPriorityColor(priority?: Task["priority"]) {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
-  const toggleTask = useTaskStore((state) => state.toggleTask);
+  const [editOpen, setEditOpen] = useState(false);
+  const { toggleTask, removeTask, updateTask } = useTaskStore();
 
   return (
-    <Card className="mb-2">
-      <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4">
-        <div className="flex items-center gap-3">
-          <Checkbox
-            id={`checkbox-${task.id}`}
-            checked={task.completed}
-            onCheckedChange={() => toggleTask(task.id)}
-          />
-          <label
-            htmlFor={`checkbox-${task.id}`}
-            className={`text-sm ${
-              task.completed ? "line-through text-gray-400" : "text-gray-900"
-            }`}
-          >
-            {task.title}
-          </label>
-        </div>
-
-        <div className="flex flex-col md:items-end items-start gap-3">
-          {task.priority && (
-            <span
-              className={`text-xs px-2 py-0.5 rounded-full font-medium ${getPriorityColor(
-                task.priority
-              )}`}
+    <>
+      <Card className="mb-2">
+        <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4">
+          <div className="flex items-center gap-3">
+            <Checkbox
+              id={`checkbox-${task.id}`}
+              checked={task.completed}
+              onCheckedChange={() => toggleTask(task.id)}
+            />
+            <label
+              htmlFor={`checkbox-${task.id}`}
+              className={`text-sm ${
+                task.completed ? "line-through text-gray-400" : "text-gray-900"
+              }`}
             >
-              {task.priority === "high"
-                ? "Haute"
-                : task.priority === "medium"
-                ? "Moyenne"
-                : "Basse"}
-            </span>
-          )}
-          {task.dueDate && (
-            <div className="flex items-center gap-1 text-xs text-gray-500">
-              <CalendarDays className="w-4 h-4" />
-              <span>
-                Échéance :{" "}
-                {new Date(task.dueDate).toLocaleDateString("fr-FR", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
+              {task.title}
+            </label>
+          </div>
+
+          <div className="flex flex-col md:items-end items-start gap-3">
+            {task.priority && (
+              <span
+                className={`text-xs px-2 py-0.5 rounded-full font-medium ${getPriorityColor(
+                  task.priority
+                )}`}
+              >
+                {task.priority === "high"
+                  ? "Haute"
+                  : task.priority === "medium"
+                  ? "Moyenne"
+                  : "Basse"}
               </span>
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+            )}
+            {task.dueDate && (
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <CalendarDays className="w-4 h-4" />
+                <span>
+                  Échéance :{" "}
+                  {new Date(task.dueDate).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+            )}
+            {/* Bouton Modifier */}
+            <button
+              onClick={() => setEditOpen(true)}
+              className="text-xs text-blue-500 hover:underline"
+            >
+              Modifier
+            </button>
+            {/* Bouton Supprimer */}
+            <button
+              onClick={() => {
+                removeTask(task.id);
+                toast.success("Tâche supprimée avec succès");
+              }}
+              className="text-xs text-red-500 hover:underline"
+            >
+              Supprimer
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+      <TaskModal
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        initialTask={task}
+        onUpdate={(updatedTask) => {
+          updateTask(updatedTask);
+          toast.success("Tâche modifiée avec succès");
+          setEditOpen(false);
+        }}
+      />
+    </>
   );
 }
