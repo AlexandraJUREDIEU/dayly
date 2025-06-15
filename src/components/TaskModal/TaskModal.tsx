@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,14 +21,34 @@ import type { Task } from "../TaskCard/TaskCard";
 
 type TaskModalProps = {
   onCreate: (task: Task) => void;
+  onUpdate?: (task: Task) => void;
+  initialTask?: Task;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
-export function TaskModal({ onCreate }: TaskModalProps) {
-  const [open, setOpen] = useState(false);
+export function TaskModal({
+  onCreate,
+  onUpdate,
+  initialTask,
+  open,
+  onOpenChange,
+}: TaskModalProps) {
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState<Task["status"]>("todo");
   const [priority, setPriority] = useState<Task["priority"]>("medium");
   const [dueDate, setDueDate] = useState<string | undefined>("");
+
+  useEffect(() => {
+    if (initialTask) {
+      setTitle(initialTask.title);
+      setStatus(initialTask.status);
+      setPriority(initialTask.priority || "medium");
+      setDueDate(initialTask.dueDate || "");
+    } else {
+      resetForm();
+    }
+  }, [initialTask, open]);
 
   const resetForm = () => {
     setTitle("");
@@ -41,38 +60,39 @@ export function TaskModal({ onCreate }: TaskModalProps) {
   const handleSave = (closeAfterSave: boolean) => {
     if (!title.trim()) return;
 
-    const newTask: Task = {
-      id: uuidv4(),
+    const task: Task = {
+      id: initialTask?.id ?? uuidv4(),
       title,
-      completed: false,
+      completed: initialTask?.completed ?? false,
       status,
       priority,
       dueDate: dueDate || undefined,
     };
 
-    onCreate(newTask);
+    if (initialTask && onUpdate) {
+      onUpdate(task);
+    } else {
+      onCreate(task);
+    }
 
     if (closeAfterSave) {
-      setOpen(false);
+      onOpenChange(false);
     }
 
     resetForm();
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          <span className="hidden sm:inline">Nouvelle tâche</span>
-          <span className="inline sm:hidden">+</span>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
-          <DialogTitle>Créer une tâche</DialogTitle>
+          <DialogTitle>
+            {initialTask ? "Modifier la tâche" : "Créer une tâche"}
+          </DialogTitle>
           <DialogDescription>
-            Remplis les champs ci-dessous pour ajouter une nouvelle tâche à ton
-            tableau.
+            {initialTask
+              ? "Modifie les champs ci-dessous pour mettre à jour ta tâche."
+              : "Remplis les champs ci-dessous pour ajouter une nouvelle tâche à ton tableau."}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 py-2">

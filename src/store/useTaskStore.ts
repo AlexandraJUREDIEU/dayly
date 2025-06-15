@@ -15,6 +15,7 @@ export interface Task {
 interface TaskStore {
   tasks: Task[];
   addTask: (task: Task) => void;
+  updateTask: (updatedTask: Task) => void;
   removeTask: (id: string) => void;
   toggleTask: (id: string) => void;
   setTasks: (tasks: Task[]) => void;
@@ -25,6 +26,12 @@ export const useTaskStore = create<TaskStore>()(
     (set) => ({
       tasks: [],
       addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
+      updateTask: (updatedTask : Task) =>
+        set((state) => ({
+          tasks: state.tasks.map((task) =>
+            task.id === updatedTask.id ? { ...task, ...updatedTask } : task
+          ),
+        })),
       removeTask: (id) =>
         set((state) => ({ tasks: state.tasks.filter((t) => t.id !== id) })),
       toggleTask: (id) =>
@@ -36,7 +43,7 @@ export const useTaskStore = create<TaskStore>()(
       setTasks: (tasks) => set({ tasks }),
     }),
     {
-      name: 'dayly-tasks', // localStorage key
+      name: 'dayly-tasks',
     }
   )
 );
