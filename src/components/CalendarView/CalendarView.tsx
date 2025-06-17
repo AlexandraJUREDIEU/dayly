@@ -1,47 +1,54 @@
-import Calendar, {type CalendarProps } from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import { useTaskStore } from "@/store/useTaskStore";
 import { useState } from "react";
-import { format } from "date-fns";
-
-type CalendarValue = CalendarProps["value"];
+import { CustomCalendar } from "@/components/CalendarView/CustomCalendar";
+import { useTaskStore } from "@/store/useTaskStore";
+import { format, isSameDay } from "date-fns";
 
 export function CalendarView() {
   const tasks = useTaskStore((state) => state.tasks);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const handleDateChange = (value: CalendarValue) => {
-    if (value instanceof Date) {
-      setSelectedDate(value);
-    }
-  };
-
-  const tasksForDate = tasks.filter((task) => {
-    if (!task.dueDate) return false;
-    const taskDate = new Date(task.dueDate);
-    return format(taskDate, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd");
-  });
+  const tasksForSelectedDate = tasks.filter(
+    (task) =>
+      task.dueDate !== undefined &&
+      isSameDay(new Date(task.dueDate), selectedDate)
+  );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <Calendar onChange={handleDateChange} value={selectedDate} />
+        <CustomCalendar
+          tasks={tasks}
+          selectedDate={selectedDate}
+          onSelectDate={setSelectedDate}
+        />
       </div>
 
-      <div className="space-y-2">
-        <h3 className="font-semibold">
-          Tâches du {format(selectedDate, "dd/MM/yyyy")} :
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">
+          Tâches du {format(selectedDate, "dd/MM/yyyy")}
         </h3>
 
-        {tasksForDate.length === 0 ? (
+        {tasksForSelectedDate.length === 0 ? (
           <p className="text-muted-foreground text-sm">Aucune tâche à cette date.</p>
         ) : (
-          tasksForDate.map((task) => (
-            <div key={task.id} className="border p-3 rounded shadow-sm">
-              <div className="font-medium">{task.title}</div>
-              <div className="text-sm text-muted-foreground">
-                Statut : {task.status} | Priorité : {task.priority}
+          tasksForSelectedDate.map((task) => (
+            <div
+              key={task.id}
+              className={`p-3 rounded-lg shadow-sm flex items-center justify-between ${
+                task.priority === "high"
+                  ? "bg-red-200 text-red-800"
+                  : task.priority === "medium"
+                  ? "bg-yellow-200 text-yellow-800"
+                  : "bg-green-200 text-green-800"
+              }`}
+            >
+              <div>
+                <p className="font-semibold text-sm">{task.title}</p>
+                <p className="text-xs text-muted-foreground">
+                  Statut : {task.status} | Priorité : {task.priority}
+                </p>
               </div>
+              <span className="text-xs capitalize">{task.status}</span>
             </div>
           ))
         )}
