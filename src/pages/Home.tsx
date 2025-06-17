@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const addTask = useTaskStore((state) => state.addTask);
+  const viewMode = useTaskStore((state) => state.viewMode);
+  const setViewMode = useTaskStore((state) => state.setViewMode);
   const [createOpen, setCreateOpen] = useState(false);
 
   const handleAddTask = (task: Task) => {
@@ -24,7 +26,12 @@ export default function Home() {
           <span className="inline sm:hidden">+</span>
         </Button>
       </div>
-
+      <p>Vue actuelle : {viewMode}</p>
+      <div className="space-x-2">
+        <button onClick={() => setViewMode("kanban")}>Kanban</button>
+        <button onClick={() => setViewMode("list")}>Liste</button>
+        <button onClick={() => setViewMode("calendar")}>Calendrier</button>
+      </div>
       <KanbanBoard />
 
       {/* Modale de création de tâche */}
