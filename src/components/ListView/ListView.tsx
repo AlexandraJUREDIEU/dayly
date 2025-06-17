@@ -1,3 +1,4 @@
+import { DndContext, closestCenter } from "@dnd-kit/core";
 import type { Task } from "@/store/useTaskStore";
 import { cn } from "@/lib/utils";
 
@@ -7,33 +8,34 @@ export function ListView({ tasks }: { tasks: Task[] }) {
       {tasks.length === 0 && (
         <p className="text-muted-foreground">Aucune tâche à afficher.</p>
       )}
-
-      {tasks.map((task) => (
-        <div
-          key={task.id}
-          className={cn(
-            "border rounded-lg p-4 flex justify-between items-center",
-            task.completed ? "bg-muted" : "bg-white"
-          )}
-        >
-          <div>
-            <h3 className="font-semibold">{task.title}</h3>
-            <p className="text-sm text-muted-foreground">
-              Échéance : {task.dueDate} | Priorité : {task.priority}
-            </p>
-          </div>
-          <span
+      <DndContext collisionDetection={closestCenter}>
+        {tasks.map((task) => (
+          <div
+            key={task.id}
             className={cn(
-              "text-xs font-medium px-2 py-1 rounded",
-              task.status === "todo" && "bg-gray-200",
-              task.status === "in-progress" && "bg-yellow-200",
-              task.status === "done" && "bg-green-200"
+              "border rounded-lg p-4 flex justify-between items-center",
+              task.completed ? "bg-muted" : "bg-white"
             )}
           >
-            {task.status}
-          </span>
-        </div>
-      ))}
+            <div>
+              <h3 className="font-semibold">{task.title}</h3>
+              <p className="text-sm text-muted-foreground">
+                Échéance : {task.dueDate} | Priorité : {task.priority}
+              </p>
+            </div>
+            <span
+              className={cn(
+                "text-xs font-medium px-2 py-1 rounded",
+                task.status === "todo" && "bg-gray-200",
+                task.status === "in-progress" && "bg-yellow-200",
+                task.status === "done" && "bg-green-200"
+              )}
+            >
+              {task.status}
+            </span>
+          </div>
+        ))}
+      </DndContext>
     </div>
   );
 }

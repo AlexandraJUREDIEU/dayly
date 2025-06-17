@@ -1,3 +1,4 @@
+import { DndContext, closestCenter } from "@dnd-kit/core";
 import { TaskColumn } from "../TaskColumn.tsx/TaskColumn";
 import type { Task } from "@/store/useTaskStore";
 
@@ -11,14 +12,16 @@ export function KanbanBoard({ tasks }: { tasks: Task[] }) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {columns.map(({ title, status }) => (
-        <TaskColumn
-          key={status}
-          title={title}
-          status={status}
-          tasks={tasks.filter((t) => t.status === status)}
-        />
-      ))}
+      <DndContext collisionDetection={closestCenter}>
+        {columns.map(({ title, status }) => (
+          <TaskColumn
+            key={status}
+            title={title}
+            status={status}
+            tasks={tasks.filter((t) => t.status === status)}
+          />
+        ))}
+      </DndContext>
     </div>
   );
 }
