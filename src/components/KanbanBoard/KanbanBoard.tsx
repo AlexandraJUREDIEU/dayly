@@ -1,14 +1,13 @@
-import { useTaskStore } from "@/store/useTaskStore";
 import { TaskColumn } from "../TaskColumn.tsx/TaskColumn";
+import type { Task } from "@/store/useTaskStore";
 
-export function KanbanBoard() {
-  const tasks = useTaskStore((state) => state.tasks);
-
-  const columns: { title: string; status: "todo" | "in-progress" | "done" }[] = [
-    { title: "À faire", status: "todo" },
-    { title: "En cours", status: "in-progress" },
-    { title: "Terminées", status: "done" },
-  ];
+export function KanbanBoard({ tasks }: { tasks: Task[] }) {
+  const columns: { title: string; status: "todo" | "in-progress" | "done" }[] =
+    [
+      { title: "À faire", status: "todo" },
+      { title: "En cours", status: "in-progress" },
+      { title: "Terminées", status: "done" },
+    ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

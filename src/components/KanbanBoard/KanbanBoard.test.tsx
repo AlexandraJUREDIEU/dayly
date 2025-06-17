@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import type { Task } from "../TaskCard/TaskCard";
+import type { Task } from "@/store/useTaskStore";
 import { KanbanBoard } from "./KanbanBoard";
 
 const mockTasks: Task[] = [
