@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { CustomCalendar } from "@/components/CalendarView/CustomCalendar";
-import { useTaskStore } from "@/store/useTaskStore";
+import type { Task } from "@/store/useTaskStore";
 import { format, isSameDay } from "date-fns";
 
-export function CalendarView() {
-  const tasks = useTaskStore((state) => state.tasks);
+export function CalendarView({ tasks }: { tasks: Task[] }) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const tasksForSelectedDate = tasks.filter(
@@ -29,7 +28,9 @@ export function CalendarView() {
         </h3>
 
         {tasksForSelectedDate.length === 0 ? (
-          <p className="text-muted-foreground text-sm">Aucune tâche à cette date.</p>
+          <p className="text-muted-foreground text-sm">
+            Aucune tâche à cette date.
+          </p>
         ) : (
           tasksForSelectedDate.map((task) => (
             <div

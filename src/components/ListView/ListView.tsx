@@ -1,12 +1,12 @@
-import { useTaskStore } from "@/store/useTaskStore";
+import type { Task } from "@/store/useTaskStore";
 import { cn } from "@/lib/utils";
 
-export function ListView() {
-  const tasks = useTaskStore((state) => state.tasks);
-
+export function ListView({ tasks }: { tasks: Task[] }) {
   return (
     <div className="space-y-2">
-      {tasks.length === 0 && <p className="text-muted-foreground">Aucune tâche à afficher.</p>}
+      {tasks.length === 0 && (
+        <p className="text-muted-foreground">Aucune tâche à afficher.</p>
+      )}
 
       {tasks.map((task) => (
         <div

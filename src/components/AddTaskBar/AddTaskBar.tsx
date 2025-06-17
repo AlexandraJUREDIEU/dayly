@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Task } from "../TaskCard/TaskCard";
+import type { Task } from "@/store/useTaskStore";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

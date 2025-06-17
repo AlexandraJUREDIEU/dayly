@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Task } from "../TaskCard/TaskCard";
+import type { Task } from "@/store/useTaskStore";
 import { v4 as uuidv4 } from "uuid";
 import { TaskList } from "../TaskList/TaskList";
 
@@ -14,6 +14,7 @@ export default function TodayPanel() {
         const newTask: Task = {
             id: uuidv4(),
             title: input,
+            status: "todo",
             completed: false,
         };
         setTasks((prev) => [...prev, newTask]);

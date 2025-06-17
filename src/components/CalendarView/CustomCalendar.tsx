@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { Task } from "@/store/useTaskStore";
 import {
   startOfMonth,
   endOfMonth,
@@ -11,8 +12,6 @@ import {
   addMonths,
   subMonths,
 } from "date-fns";
-
-import type { Task } from "@/components/TaskCard/TaskCard";
 
 type CustomCalendarProps = {
   tasks: Task[];
