@@ -6,6 +6,7 @@ import { TaskModal } from "@/components/TaskModal";
 import { Button } from "@/components/ui/button";
 import { ViewSwitcher } from "@/components/ViewSwitcher/ViewSwitcher";
 import { ListView } from "@/components/ListView/ListView";
+import { CalendarView } from "@/components/CalendarView/CalendarView";
 
 export default function Home() {
   const addTask = useTaskStore((state) => state.addTask);
@@ -30,11 +31,7 @@ export default function Home() {
       <ViewSwitcher />
       {viewMode === "kanban" && <KanbanBoard />}
       {viewMode === "list" && <ListView />}
-      {viewMode === "calendar" && (
-        <div className="text-center text-muted-foreground py-10">
-          CalendarView à venir...
-        </div>
-      )}
+      {viewMode === "calendar" && <CalendarView />}
 
       {/* Modale de création de tâche */}
       <TaskModal
