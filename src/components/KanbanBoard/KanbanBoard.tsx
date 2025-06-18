@@ -3,8 +3,8 @@ import { TaskColumn } from "../TaskColumn.tsx/TaskColumn";
 import { useTaskStore } from "@/store/useTaskStore";
 import type { Task, TaskStatus } from "@/store/useTaskStore";
 
-const isTaskStatus = (value: any): value is TaskStatus => {
-return ["todo", "in-progress", "done"].includes(value);
+const isTaskStatus = (value: unknown): value is TaskStatus => {
+return typeof value === "string" && ["todo", "in-progress", "done"].includes(value);
 };
 export function KanbanBoard({ tasks: tasksProp }: { tasks?: Task[] }) {
   const { tasks: storeTasks, updateTask } = useTaskStore();
@@ -49,9 +49,10 @@ const handleDragEnd = (event: DragEndEvent) => {
     const overIndex = columnTasks.findIndex((t) => t.id === overId);
     newOrder = overIndex === -1 ? 0 : columnTasks[overIndex].order ?? overIndex;
     // Décale les autres tâches si besoin
-    columnTasks
+    const updates = columnTasks
       .filter((t) => (t.order ?? 0) >= newOrder)
-      .forEach((t) => updateTask(t.id, { order: (t.order ?? 0) + 1 }));
+      .map((t) => ({ id: t.id, changes: { order: (t.order ?? 0) + 1 } }));
+    updates.forEach(({ id, changes }) => updateTask(id, changes));
   }
 
   updateTask(taskId, { status: targetStatus, order: newOrder });
