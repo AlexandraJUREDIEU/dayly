@@ -1,4 +1,5 @@
-import type { Task } from "@/components/TaskCard/TaskCard";
+import type { Task } from "@/store/useTaskStore";
+import { useDroppable } from "@dnd-kit/core";
 import TaskCard from "@/components/TaskCard/TaskCard";
 
 type TaskColumnProps = {
@@ -8,7 +9,9 @@ type TaskColumnProps = {
 };
 
 export function TaskColumn({ title, status, tasks }: TaskColumnProps) {
-
+  const { isOver, setNodeRef } = useDroppable({
+    id: status,
+  });
 
   const bgColor = {
     todo: "bg-slate-50",
@@ -23,7 +26,9 @@ export function TaskColumn({ title, status, tasks }: TaskColumnProps) {
   }[status];
 
   return (
-    <div className={`rounded-lg p-4 shadow-sm ${bgColor} flex flex-col gap-2`}>
+    <div 
+    ref={setNodeRef}
+    className={`rounded-lg p-4 shadow-sm ${bgColor} flex flex-col gap-2 ${isOver ? "ring-2 ring-blue-500" : ""}`}>
       <h2 className={`text-md font-semibold mb-2 uppercase tracking-wide ${textColor}`}>
         {title}
       </h2>

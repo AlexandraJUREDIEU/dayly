@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDraggable } from "@dnd-kit/core";
 import { TaskModal } from "@/components/TaskModal";
 import { toast } from "sonner";
 import { useTaskStore } from "@/store/useTaskStore";
@@ -35,9 +36,28 @@ function getPriorityColor(priority?: Task["priority"]) {
 export default function TaskCard({ task }: TaskCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const { toggleTask, removeTask, updateTask } = useTaskStore();
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task.id,
+    data: {
+      task,
+    },
+  });
+
+    const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
   return (
-    <>
+    <div
+    ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={style}
+      className={`transition-opacity ${
+        isDragging ? "opacity-50" : ""
+      }`}>
       <Card className="mb-2">
         <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4">
           <div className="flex items-center gap-3">
@@ -108,11 +128,11 @@ export default function TaskCard({ task }: TaskCardProps) {
         onOpenChange={setEditOpen}
         initialTask={task}
         onUpdate={(updatedTask) => {
-          updateTask(updatedTask);
+          updateTask(updatedTask.id, updatedTask);
           toast.success("Tâche modifiée avec succès");
           setEditOpen(false);
         }}
       />
-    </>
+    </div>
   );
 }

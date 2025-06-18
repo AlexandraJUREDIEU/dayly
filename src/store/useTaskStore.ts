@@ -16,7 +16,7 @@ export interface Task {
 interface TaskStore {
   tasks: Task[];
   addTask: (task: Task) => void;
-  updateTask: (updatedTask: Task) => void;
+  updateTask: (id: string , partial: Partial<Task>) => void;
   removeTask: (id: string) => void;
   toggleTask: (id: string) => void;
   setTasks: (tasks: Task[]) => void;
@@ -31,10 +31,10 @@ export const useTaskStore = create<TaskStore>()(
       viewMode: "kanban",
       setViewMode: (mode) => set({ viewMode: mode }),
       addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
-      updateTask: (updatedTask: Task) =>
+      updateTask: (id, partial) =>
         set((state) => ({
           tasks: state.tasks.map((task) =>
-            task.id === updatedTask.id ? { ...task, ...updatedTask } : task
+            task.id === id ? { ...task, ...partial } : task
           ),
         })),
       removeTask: (id) =>
