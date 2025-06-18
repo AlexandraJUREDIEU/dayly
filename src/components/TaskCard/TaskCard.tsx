@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useDraggable } from "@dnd-kit/core";
 import { TaskModal } from "@/components/TaskModal";
 import { toast } from "sonner";
 import { useTaskStore } from "@/store/useTaskStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, GripVertical } from "lucide-react";
 
 export type Task = {
   id: string;
@@ -35,12 +36,41 @@ function getPriorityColor(priority?: Task["priority"]) {
 export default function TaskCard({ task }: TaskCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const { toggleTask, removeTask, updateTask } = useTaskStore();
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task.id,
+    data: {
+      task,
+    },
+  });
+
+    const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
   return (
-    <>
+    <div
+    ref={setNodeRef}
+      {...attributes}
+      
+      style={style}
+      className={`transition-opacity ${
+        isDragging ? "opacity-50" : ""
+      }`}>
       <Card className="mb-2">
         <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-1 items-center gap-3 cursor-grab">
+            {/* Drag handle */}
+            <span
+              {...listeners}
+              className="cursor-grab active:cursor-grabbing select-none"
+              title="Déplacer"
+              aria-label="Déplacer la tâche"
+            >
+              {/* Utilise une icône si tu veux */}
+              <GripVertical />
+            </span>
             <Checkbox
               id={`checkbox-${task.id}`}
               checked={task.completed}
@@ -85,17 +115,21 @@ export default function TaskCard({ task }: TaskCardProps) {
             )}
             {/* Bouton Modifier */}
             <button
-              onClick={() => setEditOpen(true)}
+              onClick={(e) => {
+    e.stopPropagation();
+    setEditOpen(true);
+  }}
               className="text-xs text-blue-500 hover:underline"
             >
               Modifier
             </button>
             {/* Bouton Supprimer */}
             <button
-              onClick={() => {
-                removeTask(task.id);
-                toast.success("Tâche supprimée avec succès");
-              }}
+              onClick={(e) => {
+    e.stopPropagation();
+    removeTask(task.id);
+    toast.success("Tâche supprimée avec succès");
+  }}
               className="text-xs text-red-500 hover:underline"
             >
               Supprimer
@@ -108,11 +142,11 @@ export default function TaskCard({ task }: TaskCardProps) {
         onOpenChange={setEditOpen}
         initialTask={task}
         onUpdate={(updatedTask) => {
-          updateTask(updatedTask);
+          updateTask(updatedTask.id, updatedTask);
           toast.success("Tâche modifiée avec succès");
           setEditOpen(false);
         }}
       />
-    </>
+    </div>
   );
 }
